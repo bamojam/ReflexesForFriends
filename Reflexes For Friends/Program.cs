@@ -7,6 +7,8 @@ namespace Reflexes_For_Friends
 {
     static class Program
     {
+        static KeyboardModule keyboardModule;
+
         static void Main()
         {
             RenderWindow window = new RenderWindow(new VideoMode(800, 800), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
@@ -15,7 +17,13 @@ namespace Reflexes_For_Friends
             #region Register Event Handlers
             window.Closed += new EventHandler(OnClosed);
             window.KeyPressed += new EventHandler<KeyEventArgs>(OnKeyPressed);
+            window.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased);
             #endregion
+
+#region Setup Modules
+            keyboardModule = new KeyboardModule();
+#endregion
+
 
             window.SetActive();
             while (window.IsOpen())
@@ -36,6 +44,14 @@ namespace Reflexes_For_Friends
 
         static void OnKeyPressed(object sender, KeyEventArgs e)
         {
+            Window window = (Window)sender;
+            keyboardModule.ProcessKeyPress(e, true);
+        }
+
+        static void OnKeyReleased(object sender, KeyEventArgs e)
+        {
+            Window window = (Window)sender;
+            keyboardModule.ProcessKeyPress(e, false);
         }
     }
 }
