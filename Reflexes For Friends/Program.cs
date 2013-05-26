@@ -18,6 +18,7 @@ namespace Reflexes_For_Friends
         private static GameWorld world;
         private static KeyboardModule keyboardModule;
         private static Player player;
+        private static Friend friend;
 
         public static void Main()
         {
@@ -25,6 +26,7 @@ namespace Reflexes_For_Friends
             window = new RenderWindow(new VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
             timer = new Stopwatch();
             player = new Player(new Texture("resources/player.png"));
+            friend = new Friend(new Texture("resources/friend.png"));
             world = new TiledGameWorld(new Texture("resources/background-grass.png"));
             #endregion
 
@@ -68,11 +70,13 @@ namespace Reflexes_For_Friends
             window.Clear(Color.Black);
             window.Draw(world);
             window.Draw(player);
+            window.Draw(friend);
         }
 
         private static void UpdateGame(long timeSinceLastUpdate)
         {
             player.Update(timeSinceLastUpdate);
+            friend.Update(timeSinceLastUpdate);
         }
 
         private static void RegisterKeyBindings()
