@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using SFML.Window;
 using System.Text;
 
@@ -9,7 +7,7 @@ namespace Reflexes_For_Friends
 {
     class KeyboardModule
     {
-        Dictionary<string, Action> keyBindings;
+        private Dictionary<string, Action> keyBindings;
 
         public KeyboardModule()
         {

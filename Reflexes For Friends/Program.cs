@@ -12,17 +12,20 @@ namespace Reflexes_For_Friends
         public const int WINDOW_HEIGHT = 800;
         // 25ms update frequency = 40 updates per second
         const long UPDATE_FREQUENCY_IN_MS = 25;
-        static KeyboardModule keyboardModule;
-        static RenderWindow window;
-        static Stopwatch timer;
-        static Player player;
 
-        static void Main()
+        private static Stopwatch timer;
+        private static RenderWindow window;
+        private static GameWorld world;
+        private static KeyboardModule keyboardModule;
+        private static Player player;
+
+        public static void Main()
         {
             #region Initialize Variables
             window = new RenderWindow(new VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
             timer = new Stopwatch();
             player = new Player(new Texture("resources/player.png"));
+            world = new TiledGameWorld(new Texture("resources/background-grass.png"));
             #endregion
 
             #region Register Event Handlers
@@ -63,12 +66,13 @@ namespace Reflexes_For_Friends
         private static void DrawGame()
         {
             window.Clear(Color.Black);
+            window.Draw(world);
             window.Draw(player);
         }
 
-        private static void UpdateGame(long UPDATE_FREQUENCY_IN_MS)
+        private static void UpdateGame(long timeSinceLastUpdate)
         {
-            player.Update();
+            player.Update(timeSinceLastUpdate);
         }
 
         private static void RegisterKeyBindings()

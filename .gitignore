@@ -1,3 +1,4 @@
 *.sln
 Reflexes For Friends/obj/
 Reflexes For Friends/bin/
+*.dgml

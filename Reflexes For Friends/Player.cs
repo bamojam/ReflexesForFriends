@@ -10,7 +10,7 @@ namespace Reflexes_For_Friends
         {
         }
 
-        public void Update()
+        public void Update(long timeSinceLastUpdate)
         {
         }
 
