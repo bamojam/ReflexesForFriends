@@ -64,6 +64,9 @@ namespace Reflexes_For_Friends
 
             key = CreateBinding(false, false, false, false, Keyboard.Key.Escape);
             keyboardModule.AddBinding(key, false, ExitApp);
+
+            key = CreateBinding(true, false, false, false, Keyboard.Key.F2);
+            keyboardModule.AddBinding(key, false, ExitApp);
         }
 
         private static KeyEventArgs CreateBinding(bool alt, bool ctrl, bool shift, bool system, Keyboard.Key key)
