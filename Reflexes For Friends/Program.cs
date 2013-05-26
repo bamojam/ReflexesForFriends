@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using SFML;
 using SFML.Graphics;
 using SFML.Window;
@@ -7,11 +8,15 @@ namespace Reflexes_For_Friends
 {
     static class Program
     {
+        // 25ms update frequency = 40 updates per second
+        static const long UPDATE_FREQUENCY_IN_MS = 25;
         static KeyboardModule keyboardModule;
         static RenderWindow window;
+        static Stopwatch timer;
 
         static void Main()
         {
+            timer = new Stopwatch();
             window = new RenderWindow(new VideoMode(800, 800), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
             window.SetVerticalSyncEnabled(true);
 
@@ -27,15 +32,31 @@ namespace Reflexes_For_Friends
 
             RegisterKeyBindings();
 
+            long timeSinceLastUpdate = 0;
+            timer.Start();
             window.SetActive();
             while (window.IsOpen())
             {
                 window.DispatchEvents();
 
-                window.Clear(Color.Cyan);
+                timeSinceLastUpdate += timer.ElapsedMilliseconds;
+                timer.Restart();
+                if (timeSinceLastUpdate >= UPDATE_FREQUENCY_IN_MS)
+                {
+                    UpdateGame(UPDATE_FREQUENCY_IN_MS);
 
+                    timeSinceLastUpdate -= UPDATE_FREQUENCY_IN_MS;
+                }
+
+                window.Clear(Color.Cyan);
                 window.Display();
             }
+            timer.Stop();
+        }
+
+        private static void UpdateGame(long UPDATE_FREQUENCY_IN_MS)
+        {
+            throw new NotImplementedException();
         }
 
         private static void RegisterKeyBindings()
