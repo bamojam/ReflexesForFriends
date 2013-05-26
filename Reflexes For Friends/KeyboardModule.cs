@@ -16,6 +16,12 @@ namespace Reflexes_For_Friends
             keyBindings = new Dictionary<string, Action>();
         }
 
+        /// <summary>
+        /// If this key event is bound to an action, initiate that action; Otherwise do nothing.
+        /// </summary>
+        /// <param name="pressedKey">The key and modifiers that triggered this event.</param>
+        /// <param name="keyPressEvent">True if this is a KeyPress event; False if it's a
+        /// KeyRelease event</param>
         public void ProcessKeyEvent(KeyEventArgs pressedKey, bool keyPressEvent)
         {
             string currentEventHash = GenerateKeyBindingCode(pressedKey, keyPressEvent);

@@ -21,12 +21,11 @@ namespace Reflexes_For_Friends
             window.KeyReleased += new EventHandler<KeyEventArgs>(OnKeyReleased);
             #endregion
 
-#region Setup Modules
+            #region Setup Modules
             keyboardModule = new KeyboardModule();
-#endregion
+            #endregion
 
             RegisterKeyBindings();
-
 
             window.SetActive();
             while (window.IsOpen())
@@ -66,19 +65,16 @@ namespace Reflexes_For_Friends
 
         static void OnClosed(object sender, EventArgs e)
         {
-            Window window = (Window)sender;
-            window.Close();
+            ExitApp();
         }
 
         static void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            Window window = (Window)sender;
             keyboardModule.ProcessKeyEvent(e, true);
         }
 
         static void OnKeyReleased(object sender, KeyEventArgs e)
         {
-            Window window = (Window)sender;
             keyboardModule.ProcessKeyEvent(e, false);
         }
     }
