@@ -8,10 +8,11 @@ namespace Reflexes_For_Friends
     static class Program
     {
         static KeyboardModule keyboardModule;
+        static RenderWindow window;
 
         static void Main()
         {
-            RenderWindow window = new RenderWindow(new VideoMode(800, 800), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
+            window = new RenderWindow(new VideoMode(800, 800), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
             window.SetVerticalSyncEnabled(true);
 
             #region Register Event Handlers
@@ -23,6 +24,8 @@ namespace Reflexes_For_Friends
 #region Setup Modules
             keyboardModule = new KeyboardModule();
 #endregion
+
+            RegisterKeyBindings();
 
 
             window.SetActive();
@@ -36,6 +39,31 @@ namespace Reflexes_For_Friends
             }
         }
 
+        private static void RegisterKeyBindings()
+        {
+            KeyEventArgs key;
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Escape);
+            keyboardModule.AddBinding(key, false, ExitApp);
+        }
+
+        private static KeyEventArgs CreateBinding(bool alt, bool ctrl, bool shift, bool system, Keyboard.Key key)
+        {
+            KeyEventArgs binding = new KeyEventArgs(new KeyEvent());
+            binding.Alt = alt;
+            binding.Control = ctrl;
+            binding.Shift = shift;
+            binding.System = system;
+            binding.Code = key;
+
+            return binding;
+        }
+
+        private static void ExitApp()
+        {
+            window.Close();
+        }
+
         static void OnClosed(object sender, EventArgs e)
         {
             Window window = (Window)sender;
@@ -45,13 +73,13 @@ namespace Reflexes_For_Friends
         static void OnKeyPressed(object sender, KeyEventArgs e)
         {
             Window window = (Window)sender;
-            keyboardModule.ProcessKeyPress(e, true);
+            keyboardModule.ProcessKeyEvent(e, true);
         }
 
         static void OnKeyReleased(object sender, KeyEventArgs e)
         {
             Window window = (Window)sender;
-            keyboardModule.ProcessKeyPress(e, false);
+            keyboardModule.ProcessKeyEvent(e, false);
         }
     }
 }
