@@ -9,7 +9,7 @@ namespace Reflexes_For_Friends
     static class Program
     {
         // 25ms update frequency = 40 updates per second
-        static const long UPDATE_FREQUENCY_IN_MS = 25;
+        const long UPDATE_FREQUENCY_IN_MS = 25;
         static KeyboardModule keyboardModule;
         static RenderWindow window;
         static Stopwatch timer;
@@ -56,7 +56,6 @@ namespace Reflexes_For_Friends
 
         private static void UpdateGame(long UPDATE_FREQUENCY_IN_MS)
         {
-            throw new NotImplementedException();
         }
 
         private static void RegisterKeyBindings()
