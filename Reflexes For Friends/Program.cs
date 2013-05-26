@@ -8,17 +8,22 @@ namespace Reflexes_For_Friends
 {
     static class Program
     {
+        public const int WINDOW_WIDTH = 800;
+        public const int WINDOW_HEIGHT = 800;
         // 25ms update frequency = 40 updates per second
         const long UPDATE_FREQUENCY_IN_MS = 25;
         static KeyboardModule keyboardModule;
         static RenderWindow window;
         static Stopwatch timer;
+        static Player player;
 
         static void Main()
         {
+            #region Initialize Variables
+            window = new RenderWindow(new VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
             timer = new Stopwatch();
-            window = new RenderWindow(new VideoMode(800, 800), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
-            window.SetVerticalSyncEnabled(true);
+            player = new Player(new Texture("resources/player.png"));
+            #endregion
 
             #region Register Event Handlers
             window.Closed += new EventHandler(OnClosed);
@@ -31,6 +36,7 @@ namespace Reflexes_For_Friends
             #endregion
 
             RegisterKeyBindings();
+            window.SetVerticalSyncEnabled(true);
 
             long timeSinceLastUpdate = 0;
             timer.Start();
@@ -48,14 +54,21 @@ namespace Reflexes_For_Friends
                     timeSinceLastUpdate -= UPDATE_FREQUENCY_IN_MS;
                 }
 
-                window.Clear(Color.Cyan);
+                DrawGame();
                 window.Display();
             }
             timer.Stop();
         }
 
+        private static void DrawGame()
+        {
+            window.Clear(Color.Black);
+            window.Draw(player);
+        }
+
         private static void UpdateGame(long UPDATE_FREQUENCY_IN_MS)
         {
+            player.Update();
         }
 
         private static void RegisterKeyBindings()
@@ -67,6 +80,18 @@ namespace Reflexes_For_Friends
 
             key = CreateBinding(true, false, false, false, Keyboard.Key.F2);
             keyboardModule.AddBinding(key, false, ExitApp);
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Left);
+            keyboardModule.AddBinding(key, false, player.MoveLeft);
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Right);
+            keyboardModule.AddBinding(key, false, player.MoveRight);
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Up);
+            keyboardModule.AddBinding(key, false, player.MoveUp);
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Down);
+            keyboardModule.AddBinding(key, false, player.MoveDown);
         }
 
         private static KeyEventArgs CreateBinding(bool alt, bool ctrl, bool shift, bool system, Keyboard.Key key)
