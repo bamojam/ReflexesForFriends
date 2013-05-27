@@ -30,7 +30,7 @@ namespace Reflexes_For_Friends
         {
             if (framesSinceLastMove >= framesPerMove)
             {
-                var newLocation = new Vector2f();
+                var newLocation = new Vector2f(Position.X, Position.Y);
                 if (xMover)
                 {
                     if (xDirectionPositive)
