@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using SFML;
 using SFML.Graphics;
@@ -19,15 +20,17 @@ namespace Reflexes_For_Friends
         private static KeyboardModule keyboardModule;
         private static Player player;
         private static Friend friend;
+        private static IList<Enemy> enemies;
 
         public static void Main()
         {
             #region Initialize Variables
             window = new RenderWindow(new VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Reflexes For Friends", Styles.Default, new ContextSettings(32, 0));
             timer = new Stopwatch();
+            world = new GameWorld(new Texture("resources/background-grass.png"));
             player = new Player(new Texture("resources/player.png"));
             friend = new Friend(new Texture("resources/friend.png"));
-            world = new TiledGameWorld(new Texture("resources/background-grass.png"));
+            enemies = new List<Enemy>();
             #endregion
 
             #region Register Event Handlers
@@ -41,11 +44,14 @@ namespace Reflexes_For_Friends
             #endregion
 
             RegisterKeyBindings();
-            window.SetVerticalSyncEnabled(true);
+            GenerateEnemies();
 
-            long timeSinceLastUpdate = 0;
-            timer.Start();
+            window.SetVerticalSyncEnabled(true);
             window.SetActive();
+
+            timer.Start();
+            long timeSinceLastUpdate = 0;
+
             while (window.IsOpen())
             {
                 window.DispatchEvents();
@@ -65,18 +71,35 @@ namespace Reflexes_For_Friends
             timer.Stop();
         }
 
+        private static void UpdateGame(long timeSinceLastUpdate)
+        {
+            player.Update(timeSinceLastUpdate);
+            friend.Update(timeSinceLastUpdate);
+            foreach (var enemy in enemies)
+            {
+                enemy.Update(timeSinceLastUpdate);
+            }
+        }
+
         private static void DrawGame()
         {
             window.Clear(Color.Black);
             window.Draw(world);
             window.Draw(player);
             window.Draw(friend);
+            foreach (var enemy in enemies)
+            {
+                window.Draw(enemy);
+            }
         }
 
-        private static void UpdateGame(long timeSinceLastUpdate)
+        private static void GenerateEnemies()
         {
-            player.Update(timeSinceLastUpdate);
-            friend.Update(timeSinceLastUpdate);
+            var enemyTexture = new Texture("resources/enemy.png");
+            for (var i = 0; i < 10; i++)
+            {
+                enemies.Add(new Enemy(enemyTexture));
+            }
         }
 
         private static void RegisterKeyBindings()
