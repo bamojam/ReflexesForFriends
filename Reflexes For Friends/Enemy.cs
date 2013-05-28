@@ -21,8 +21,9 @@ namespace Reflexes_For_Friends
             // 0 = doesn't move; 80 = moves every two seconds
             framesPerMove = random.Next(0, 81);
 
-            var initialXPosition = random.Next(2, Program.WINDOW_WIDTH/TextureRect.Width) * TextureRect.Width;
-            var initialYPosition = random.Next(2, Program.WINDOW_HEIGHT/TextureRect.Height) * TextureRect.Height;
+            // 2 provides a buffer so the upper left and bottom right corners are safe at the start
+            var initialXPosition = random.Next(2, (Program.WINDOW_WIDTH/TextureRect.Width)-2) * TextureRect.Width;
+            var initialYPosition = random.Next(2, (Program.WINDOW_HEIGHT/TextureRect.Height)-2) * TextureRect.Height;
             Position = new Vector2f(initialXPosition, initialYPosition);
         }
 

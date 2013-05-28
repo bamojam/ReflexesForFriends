@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using SFML;
 using SFML.Graphics;
 using SFML.Window;
@@ -21,6 +22,8 @@ namespace Reflexes_For_Friends
         private static Player player;
         private static Friend friend;
         private static IList<Enemy> enemies;
+        private static Text gameOverText;
+        private static bool gameOver;
 
         public static void Main()
         {
@@ -31,6 +34,7 @@ namespace Reflexes_For_Friends
             player = new Player(new Texture("resources/player.png"));
             friend = new Friend(new Texture("resources/friend.png"));
             enemies = new List<Enemy>();
+            gameOver = false;
             #endregion
 
             #region Register Event Handlers
@@ -46,23 +50,25 @@ namespace Reflexes_For_Friends
             RegisterKeyBindings();
             GenerateEnemies();
 
-            window.SetVerticalSyncEnabled(true);
-            window.SetActive();
-
             timer.Start();
             long timeSinceLastUpdate = 0;
 
+            window.SetVerticalSyncEnabled(true);
+            window.SetActive();
             while (window.IsOpen())
             {
                 window.DispatchEvents();
 
-                timeSinceLastUpdate += timer.ElapsedMilliseconds;
-                timer.Restart();
-                if (timeSinceLastUpdate >= UPDATE_FREQUENCY_IN_MS)
+                if (!gameOver)
                 {
-                    UpdateGame(UPDATE_FREQUENCY_IN_MS);
+                    timeSinceLastUpdate += timer.ElapsedMilliseconds;
+                    timer.Restart();
+                    if (timeSinceLastUpdate >= UPDATE_FREQUENCY_IN_MS)
+                    {
+                        UpdateGame(UPDATE_FREQUENCY_IN_MS);
 
-                    timeSinceLastUpdate -= UPDATE_FREQUENCY_IN_MS;
+                        timeSinceLastUpdate -= UPDATE_FREQUENCY_IN_MS;
+                    }
                 }
 
                 DrawGame();
@@ -79,6 +85,53 @@ namespace Reflexes_For_Friends
             {
                 enemy.Update(timeSinceLastUpdate);
             }
+
+            if (GameWinningCollisionOccurred())
+            {
+                ShowGameOverText("Congratulations Winner!!", Color.White);
+                gameOver = true;
+            }
+            else if (GameLosingCollisionOccurred())
+            {
+                ShowGameOverText("Aww, Sorry!! :( :(", Color.White);
+                gameOver = true;
+            }
+        }
+
+        private static void ShowGameOverText(string textToShow, Color color)
+        {
+            gameOverText = new Text(textToShow, new Font("resources/fonts/TitilliumWeb-Regular.ttf"))
+                {
+                    Position = new Vector2f(100f, 250f),
+                    Color = color
+                };
+        }
+
+        private static bool GameWinningCollisionOccurred()
+        {
+            IntRect playerRect = new IntRect((int)player.Position.X, (int)player.Position.Y, player.TextureRect.Width, player.TextureRect.Height);
+            IntRect friendRect = new IntRect((int)friend.Position.X, (int)friend.Position.Y, friend.TextureRect.Width, friend.TextureRect.Height);
+            return playerRect.Intersects(friendRect);
+            // These TextureRects don't move as the Sprite changes position. They stay at 0, 0.
+//            return player.TextureRect.Intersects(friend.TextureRect);
+        }
+
+        private static bool GameLosingCollisionOccurred()
+        {
+            IntRect playerRect = new IntRect((int)player.Position.X, (int)player.Position.Y, player.TextureRect.Width, player.TextureRect.Height);
+            IntRect enemyRect = new IntRect();
+            foreach (var enemy in enemies)
+            {
+                enemyRect.Left = (int)enemy.Position.X;
+                enemyRect.Top = (int)enemy.Position.Y;
+                enemyRect.Width = enemy.TextureRect.Width;
+                enemyRect.Height = enemy.TextureRect.Height;
+                if (playerRect.Intersects(enemyRect))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static void DrawGame()
@@ -91,12 +144,17 @@ namespace Reflexes_For_Friends
             {
                 window.Draw(enemy);
             }
+
+            if (gameOver)
+            {
+                window.Draw(gameOverText);
+            }
         }
 
         private static void GenerateEnemies()
         {
             var enemyTexture = new Texture("resources/enemy.png");
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 30; i++)
             {
                 enemies.Add(new Enemy(enemyTexture));
             }
