@@ -63,5 +63,10 @@ namespace Reflexes_For_Friends
 
             return code.ToString();
         }
+
+        public void RemoveBinding(KeyEventArgs keyEvent, bool keyPressEvent)
+        {
+            keyBindings.Remove(GenerateKeyBindingCode(keyEvent, keyPressEvent));
+        }
     }
 }

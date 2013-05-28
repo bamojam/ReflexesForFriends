@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using SFML;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -88,14 +86,33 @@ namespace Reflexes_For_Friends
 
             if (GameWinningCollisionOccurred())
             {
-                ShowGameOverText("Congratulations Winner!!", Color.White);
+                ShowGameOverText("Congratulations, Friendship Formed!!", Color.White);
                 gameOver = true;
+                RemoveKeyBindings();
             }
             else if (GameLosingCollisionOccurred())
             {
-                ShowGameOverText("Aww, Sorry!! :( :(", Color.White);
+                ShowGameOverText("Aww, Sorry, Friendship Blocked!! :( :(", Color.White);
                 gameOver = true;
+                RemoveKeyBindings();
             }
+        }
+
+        private static void RemoveKeyBindings()
+        {
+            KeyEventArgs key;
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Left);
+            keyboardModule.RemoveBinding(key, false);
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Right);
+            keyboardModule.RemoveBinding(key, false);
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Up);
+            keyboardModule.RemoveBinding(key, false);
+
+            key = CreateBinding(false, false, false, false, Keyboard.Key.Down);
+            keyboardModule.RemoveBinding(key, false);
         }
 
         private static void ShowGameOverText(string textToShow, Color color)
